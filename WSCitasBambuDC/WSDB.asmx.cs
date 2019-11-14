@@ -18,9 +18,34 @@ namespace WSCitasBambuDC
     {
 
         [WebMethod]
-        public string HelloWorld()
+        public bool LogIn(string correo, string pass)
         {
-            return "Hello World";
+            return true;
         }
+
+        [WebMethod]
+        public bool LogOut(string correo)
+        {
+            return true;
+        }
+
+        [WebMethod]
+        public bool CrearCita(DateTime fecha)
+        {
+            return true;
+        }
+
+        [WebMethod]
+        public bool BorrarCita(int idFecha)
+        {
+            return true;
+        }
+
+        [WebMethod]
+        public bool ReservarCita(string correoCliente, DateTime fecha)
+        {
+            return true;
+        }
+
     }
 }
