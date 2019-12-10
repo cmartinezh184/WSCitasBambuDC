@@ -111,6 +111,8 @@
     <Compile Include="Modelos\Persona.cs">
       <DependentUpon>BambuDCModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Modelos\SerializableCita.cs" />
+    <Compile Include="Modelos\SerializablePersona.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WSDB.asmx.cs">
       <DependentUpon>WSDB.asmx</DependentUpon>
