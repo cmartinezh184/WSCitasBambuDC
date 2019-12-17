@@ -72,11 +72,11 @@ namespace WSCitasBambuDC
         /// <param name="pass">Password ingresada</param>
         /// <returns>Booleano del estado de la operacion</returns>
         [WebMethod]
-        public bool LogIn(string correo, string pass)
+        public SerializablePersona LogIn(string correo, string pass)
         {
             if(correo.Trim().Equals("") || pass.Trim().Equals("") || !ValidarCorreo(correo))
             {
-                return false;
+                return null;
             }
 
             // Se usan las entidades obtenidas de la base de datos
@@ -91,11 +91,21 @@ namespace WSCitasBambuDC
                 // Si se encontro al usuario se continua
                 if (query.Any())
                 {
-                    return true;
+                    SerializablePersona persona = new SerializablePersona();
+                    persona.PersonaID = query.FirstOrDefault().PersonaID;
+                    persona.Cedula = query.FirstOrDefault().Cedula;
+                    persona.PrimerNombre = query.FirstOrDefault().PrimerNombre;
+                    persona.SegundoApellido = query.FirstOrDefault().SegundoNombre;
+                    persona.PrimerApellido = query.FirstOrDefault().PrimerApellido;
+                    persona.SegundoApellido = query.FirstOrDefault().SegundoApellido;
+                    persona.Telefono = query.FirstOrDefault().Telefono;
+                    persona.Correo = query.FirstOrDefault().Correo;
+                    persona.EsAdmin = query.FirstOrDefault().EsAdmin;
+                    return persona;
                 }
                 
             }
-            return false;
+            return null;
         }
 
         /// <summary>

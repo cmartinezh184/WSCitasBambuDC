@@ -11,6 +11,7 @@ namespace WSCitasBambuDC.Modelos
     public class SerializablePersona
     {
         public int PersonaID { get; set; }
+        public int Cedula { get; set; }
         public string PrimerNombre { get; set; }
         public string SegundoNombre { get; set; }
         public string PrimerApellido { get; set; }
