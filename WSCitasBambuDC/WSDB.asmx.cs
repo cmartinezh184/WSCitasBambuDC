@@ -40,6 +40,11 @@ namespace WSCitasBambuDC
                 return false;
             }
 
+            if (!ValidarCorreo(correo))
+            {
+                return false;
+            }
+
             // Se crea un objeto de tipo persona con los datos ingresados
             Persona persona = new Persona();
 
@@ -131,22 +136,30 @@ namespace WSCitasBambuDC
         /// <param name="descripcion">Descripcion de la cita</param>
         /// <returns>true si se logra terminar la operacion</returns>
         [WebMethod]
-        public bool CrearCita(DateTime fecha, string descripcion)
+        public bool CrearCita(DateTime fecha)
         {
             // Se verifica que los datos no vengan vacios
-            if(fecha == null || descripcion.Trim().Equals(""))
+            if(fecha == null)
             {
                 return false;
             }
             // Se crea un objeto de tipo cita con la descripcion y la fecha ingresada 
             Cita cita = new Cita()
             {
-                Descripcion = descripcion,
                 Fecha = fecha
             };
 
             using (var db = new BambuDBEntities())
             {
+                // Se busca si ya existe una cita en la fecha y hora ingresada
+                var query = from p in db.Citas
+                            where p.Fecha == fecha
+                            select p;
+                if (query.Any())
+                {
+                    return false;
+                }
+
                 db.Citas.Add(cita);
                 if(db.SaveChanges() == 0)
                 {
@@ -195,10 +208,10 @@ namespace WSCitasBambuDC
         /// <param name="idCita">Identificador de la cita</param>
         /// <returns>Booleano del estado de la operacion</returns>
         [WebMethod]
-        public bool ReservarCita(int cedulaCliente, int idCita)
+        public bool ReservarCita(int cedulaCliente, int idCita, string descripcion)
         {
             // Se verifica si los campos estan vacios
-            if(cedulaCliente == 0 || idCita == 0)
+            if(cedulaCliente == 0 || idCita == 0 || descripcion.Trim().Equals(""))
             {
                 return false;
             }
@@ -226,6 +239,9 @@ namespace WSCitasBambuDC
 
                 // Se le asigna el cliente a la cita
                 cita.ClienteAsignado = usuario.First().PersonaID;
+
+                // Se le asigna la descripcion a la cita
+                cita.Descripcion = descripcion;
 
                 if(db.SaveChanges() == 0)
                 {
