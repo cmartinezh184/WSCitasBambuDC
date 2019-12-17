@@ -308,6 +308,47 @@ namespace WSCitasBambuDC
         }
 
         /// <summary>
+        /// Metodo que devuelve las citas
+        /// </summary>
+        /// <returns>La lista si se encuentran o nulo si no hay citas asignadas</returns>
+        [WebMethod]
+        public List<SerializableCita> ListaDeCitas()
+        {
+            // Se crea una lista local
+            List<SerializableCita> listaCitas = new List<SerializableCita>();
+
+            // Se consultan las listas en base a la cedula ingresada
+            using (var db = new BambuDBEntities())
+            {
+                var citas = from c in db.Citas
+                            select c;
+
+
+                // Si la lista viene vacia se termina
+                if (citas.Count() == 0)
+                {
+                    return null;
+                }
+
+                foreach (Cita cita in citas)
+                {
+                    SerializableCita temp = new SerializableCita
+                    {
+                        CitasID = cita.CitasID,
+                        ClienteAsignado = cita.ClienteAsignado,
+                        Descripcion = cita.Descripcion,
+                        Fecha = cita.Fecha
+                    };
+                    listaCitas.Add(temp);
+                }
+
+                // Se devuelve la lista de citas
+                return listaCitas;
+            }
+
+        }
+
+        /// <summary>
         /// Metodo que devuelve la informacion del cliente
         /// </summary>
         /// <param name="cedula">Cedula del cliente</param>
