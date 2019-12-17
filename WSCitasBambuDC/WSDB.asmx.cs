@@ -35,24 +35,23 @@ namespace WSCitasBambuDC
         public bool CrearUsuario(int cedula, string primerNombre, string segundoNombre, string primerApellido, string segundoApellido, string telefono, string correo, string password)
         {
             // Se verifica que los campos no vengan vacios
-            if (cedula == 0 || primerNombre.Trim().Equals("") || segundoNombre.Trim().Equals("") || primerApellido.Trim().Equals("") || segundoApellido.Trim().Equals("") || telefono.Trim().Equals("") || correo.Trim().Equals("") || password.Trim().Equals(""))
+            if (cedula == 0 || primerNombre.Trim().Equals("") || primerApellido.Trim().Equals("") || segundoApellido.Trim().Equals("") || telefono.Trim().Equals("") || correo.Trim().Equals("") || password.Trim().Equals(""))
             {
                 return false;
             }
 
             // Se crea un objeto de tipo persona con los datos ingresados
-            Persona persona = new Persona()
-            {
-                PrimerNombre = primerNombre,
-                SegundoNombre = segundoNombre,
-                PrimerApellido = primerApellido,
-                SegundoApellido = segundoApellido,
-                Correo = correo,
-                Telefono = telefono,
-                PersonaID = cedula,
-                Pass = password,
-                EsAdmin = false,
-            };
+            Persona persona = new Persona();
+
+            persona.Cedula = cedula;
+            persona.PrimerNombre = primerNombre;
+            persona.SegundoNombre = segundoNombre;
+            persona.PrimerApellido = primerApellido;
+            persona.SegundoApellido = segundoApellido;
+            persona.Telefono = telefono;
+            persona.Correo = correo;
+            persona.Pass = password;
+            persona.EsAdmin = false;
 
             // Se ingresa el usuario a la base de datos con los datos ingresados
             using (var db = new BambuDBEntities())
@@ -122,7 +121,7 @@ namespace WSCitasBambuDC
         /// <param name="descripcion">Descripcion de la cita</param>
         /// <returns>true si se logra terminar la operacion</returns>
         [WebMethod]
-        public bool CrearCita(DateTime? fecha, string descripcion)
+        public bool CrearCita(DateTime fecha, string descripcion)
         {
             // Se verifica que los datos no vengan vacios
             if(fecha == null || descripcion.Trim().Equals(""))
@@ -206,13 +205,17 @@ namespace WSCitasBambuDC
                 }
 
                 // Se verifica que el cliente exista en el sistema
-                if(db.Personas.Find(cedulaCliente) == null)
+                var usuario = from p in db.Personas
+                              where cedulaCliente == p.Cedula
+                              select p;
+
+                if(usuario.First() == null)
                 {
                     return false;
                 }
 
                 // Se le asigna el cliente a la cita
-                cita.ClienteAsignado = cedulaCliente;
+                cita.ClienteAsignado = usuario.First().PersonaID;
 
                 if(db.SaveChanges() == 0)
                 {
@@ -243,9 +246,16 @@ namespace WSCitasBambuDC
             // Se consultan las listas en base a la cedula ingresada
             using (var db = new BambuDBEntities())
             {
+                var usuarios = from p in db.Personas
+                              where p.Cedula == cedula
+                              select p;
+
+                Persona usuario = usuarios.FirstOrDefault();
+
                 var citas = from c in db.Citas
-                            where c.ClienteAsignado == cedula
+                            where c.ClienteAsignado == usuario.PersonaID
                             select c;
+
 
                 // Si la lista viene vacia se termina
                 if(citas.Count() == 0)

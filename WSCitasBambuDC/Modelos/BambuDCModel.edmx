@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="BambuDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="BambuDBModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="Citas">
           <Key>
             <PropertyRef Name="CitasID" />
@@ -19,8 +19,9 @@
             <PropertyRef Name="PersonaID" />
           </Key>
           <Property Name="PersonaID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Cedula" Type="int" Nullable="false" />
           <Property Name="PrimerNombre" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="SegundoNombre" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="SegundoNombre" Type="nvarchar" MaxLength="50" />
           <Property Name="PrimerApellido" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="SegundoApellido" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Telefono" Type="nvarchar" MaxLength="50" Nullable="false" />
@@ -28,28 +29,11 @@
           <Property Name="Pass" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EsAdmin" Type="bit" Nullable="false" />
         </EntityType>
-        <Association Name="FK_Citas_Persona">
-          <End Role="Persona" Type="Self.Persona" Multiplicity="0..1" />
-          <End Role="Citas" Type="Self.Citas" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Persona">
-              <PropertyRef Name="PersonaID" />
-            </Principal>
-            <Dependent Role="Citas">
-              <PropertyRef Name="ClienteAsignado" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <EntityContainer Name="BambuDBModelStoreContainer">
           <EntitySet Name="Citas" EntityType="Self.Citas" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Persona" EntityType="Self.Persona" Schema="dbo" store:Type="Tables" />
-          <AssociationSet Name="FK_Citas_Persona" Association="Self.FK_Citas_Persona">
-            <End Role="Persona" EntitySet="Persona" />
-            <End Role="Citas" EntitySet="Citas" />
-          </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="BambuDBModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -69,7 +53,7 @@
           </Key>
           <Property Name="PersonaID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="PrimerNombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="SegundoNombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="SegundoNombre" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="PrimerApellido" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="SegundoApellido" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Telefono" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
@@ -77,6 +61,7 @@
           <Property Name="Pass" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="EsAdmin" Type="Boolean" Nullable="false" />
           <NavigationProperty Name="Citas" Relationship="Self.FK_Citas_Persona" FromRole="Persona" ToRole="Citas" />
+          <Property Name="Cedula" Type="Int32" Nullable="false" />
         </EntityType>
         <Association Name="FK_Citas_Persona">
           <End Role="Persona" Type="Self.Persona" Multiplicity="0..1" />
@@ -117,6 +102,7 @@
           <EntitySetMapping Name="Personas">
             <EntityTypeMapping TypeName="BambuDBModel.Persona">
               <MappingFragment StoreEntitySet="Persona">
+                <ScalarProperty Name="Cedula" ColumnName="Cedula" />
                 <ScalarProperty Name="PersonaID" ColumnName="PersonaID" />
                 <ScalarProperty Name="PrimerNombre" ColumnName="PrimerNombre" />
                 <ScalarProperty Name="SegundoNombre" ColumnName="SegundoNombre" />

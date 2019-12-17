@@ -11,10 +11,7 @@ namespace WSCitasBambuDC.Modelos
 {
     using System;
     using System.Collections.Generic;
-
-    /// <summary>
-    /// Clase usada para enlistar a las citas y devolverlas en un metodo al cliente
-    /// </summary>
+    
     public partial class Cita
     {
         public int CitasID { get; set; }
