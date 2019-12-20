@@ -332,13 +332,22 @@ namespace WSCitasBambuDC
 
                 foreach (Cita cita in citas)
                 {
-                    SerializableCita temp = new SerializableCita
+                    SerializableCita temp = new SerializableCita();
+                    if (cita.Persona == null)
                     {
-                        CitasID = cita.CitasID,
-                        ClienteAsignado = cita.ClienteAsignado,
-                        Descripcion = cita.Descripcion,
-                        Fecha = cita.Fecha
-                    };
+                        temp.CitasID = cita.CitasID;
+                        temp.ClienteAsignado = cita.ClienteAsignado;
+                        temp.NombrePaciente = "";
+                        temp.Descripcion = cita.Descripcion;
+                        temp.Fecha = cita.Fecha;
+                    } else {
+                        temp.CitasID = cita.CitasID;
+                        temp.ClienteAsignado = cita.Persona.Cedula;
+                        temp.NombrePaciente = cita.Persona.PrimerNombre + " " + cita.Persona.SegundoNombre 
+                            + " " + cita.Persona.PrimerApellido + " " + cita.Persona.SegundoApellido + " ";
+                        temp.Descripcion = cita.Descripcion;
+                        temp.Fecha = cita.Fecha;
+                    }
                     listaCitas.Add(temp);
                 }
 
