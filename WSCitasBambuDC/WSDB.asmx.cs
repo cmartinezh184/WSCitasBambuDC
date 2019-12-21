@@ -176,7 +176,7 @@ namespace WSCitasBambuDC
         /// <param name="idCita">Identificador de la cita</param>
         /// <returns>Booleano del estado de la operacion</returns>
         [WebMethod]
-        public bool BorrarCita(int idCita)
+        public bool LiberarCita(int idCita)
         {
             if (idCita == 0)
             {
@@ -199,6 +199,33 @@ namespace WSCitasBambuDC
                 }
             }
                 return true;
+        }
+
+        /// <summary>
+        /// Metodo para borrar citas de la base de datos
+        /// </summary>
+        /// <param name="idCita"></param>
+        /// <returns></returns>
+        [WebMethod]
+        public bool BorrarCita(int idCita)
+        {
+            if (idCita == 0)
+            {
+                return false;
+            }
+
+            using (var db = new BambuDBEntities())
+            {
+                var cita = db.Citas.Find(idCita);
+
+                db.Citas.Remove(cita);
+
+                if (db.SaveChanges() == 0)
+                {
+                    return false;
+                }
+            }
+            return true;
         }
 
         /// <summary>
